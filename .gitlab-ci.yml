@@ -15,6 +15,6 @@ deploy_staging:
     name: staging
     url: https://webminar-iot.smdev-staging.web.id
   script:
-    - ssh sandimulyadi@smdev-staging.web.id "cd /var/www/webminar-iot.smdev-staging.web.id/html && git fetch origin && git checkout staging && git pull origin staging && /usr/bin/php8.1 /usr/local/bin/composer install && /usr/bin/php8.1 artisan migrate && /usr/bin/php8.1 artisan db:seed --class=RolesAndPermissionsSeeder && exit"
+    - ssh sandimulyadi@smdev-staging.web.id "cd /var/www/webminar-iot.smdev-staging.web.id/html && git fetch origin && git checkout staging && git pull origin staging && npm install && npm run build && /usr/bin/php8.1 /usr/local/bin/composer install && /usr/bin/php8.1 artisan migrate && exit"
   only:
     - staging
