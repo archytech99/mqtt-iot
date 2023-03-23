@@ -1,0 +1,20 @@
+image: ubuntu:latest
+before_script:
+  - apt-get update -qq
+  - apt-get install -qq git
+  # Setup SSH deploy keys
+  - 'which ssh-agent || ( apt-get install -qq openssh-client )'
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$SSH_PRIVATE_KEY" | base64 -d)
+  - mkdir -p ~/.ssh
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+deploy_staging:
+  stage: deploy
+  environment:
+    name: staging
+    url: https://webminar-iot.smdev-staging.web.id
+  script:
+    - ssh sandimulyadi@smdev-staging.web.id "cd /var/www/webminar-iot.smdev-staging.web.id/html && git fetch origin && git checkout staging && git pull origin staging && /usr/bin/php8.1 /usr/local/bin/composer install && /usr/bin/php8.1 artisan migrate && /usr/bin/php8.1 artisan db:seed --class=RolesAndPermissionsSeeder && exit"
+  only:
+    - staging
