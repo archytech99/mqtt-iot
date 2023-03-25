@@ -44,4 +44,23 @@ class ReceiversController extends Controller
             'message' => 'Forbidden.'
         ], 403);
     }
+
+    public function webhook(Request $request)
+    {
+        $body = $request->all();
+
+        $data = [
+            'device_id' => null,
+            'type'      => 'webhook',
+            'body'      => json_encode($body)
+        ];
+
+        $record = Receivers::simpan($data);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Data has been received.',
+            'body' => $body
+        ], 200);
+    }
 }

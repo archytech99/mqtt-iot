@@ -20,3 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/receivers/sensor', [ReceiversController::class, 'sensor'])->name('receivers.sensor');
+Route::post('/receivers/webhook', [ReceiversController::class, 'webhook'])->name('receivers.webhook');
