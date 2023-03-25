@@ -27,7 +27,9 @@ class DevicesController extends Controller
         return view('devices.index', [
             'title' => 'Devices',
             'isAllowCreate' => true,
-            'records' => Devices::where('created_by', $user->id)->get()
+            'records' => Devices::where('created_by', $user->id)
+                                ->orderBy('id', 'desc')
+                                ->get()
         ]);
     }
 

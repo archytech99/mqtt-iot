@@ -45,22 +45,34 @@ class ReceiversController extends Controller
         ], 403);
     }
 
-    public function webhook(Request $request)
+    public function webhook($appid = '', $appsecret = '', Request $request)
     {
         $body = $request->all();
 
-        $data = [
-            'device_id' => null,
-            'type'      => 'webhook',
-            'body'      => json_encode($body)
-        ];
+        $device = Devices::where('appid', $appid)
+                         ->where('appsecret', $appsecret)
+                         ->whereNull('deleted_at')
+                         ->first();
 
-        $record = Receivers::simpan($data);
+        if ($device) {
+            $data = [
+                'device_id' => $device->id,
+                'type'      => 'sensor',
+                'body'      => json_encode($body)
+            ];
+
+            $record = Receivers::simpan($data);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data has been received.',
+                'body' => $body
+            ], 200);
+        }
 
         return response()->json([
-            'status' => true,
-            'message' => 'Data has been received.',
-            'body' => $body
-        ], 200);
+            'status' => false,
+            'message' => 'Forbidden.'
+        ], 403);
     }
 }

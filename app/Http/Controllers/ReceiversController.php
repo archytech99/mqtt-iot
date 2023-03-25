@@ -31,6 +31,7 @@ class ReceiversController extends Controller
             'records' => Receivers::whereHas('device', function($q) use ($user) {
                                       $q->where('created_by', $user->id);
                                   })
+                                  ->orderBy('id', 'desc')
                                   ->get()
         ]);
     }
